@@ -50,7 +50,7 @@ client.on("ready", function () {
     console.log("Mon BOT est Connecté");
 })
 
-client.login("NzUwOTg4Mzg1Njg1ODY0NDg4.X1Cibw.7cJu5QdlN8fVQ1-GpQ7TxQDNqY8");
+client.login(process.env.BOT_TOKEN);
 
 client.on('messageReactionAdd', async (reaction, user) => {
 	// When we receive a reaction we check if the reaction is partial or not
