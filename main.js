@@ -41,13 +41,41 @@ async function createChannel(message, chanName) {
     postVote(tempo1,vote1);
     postVote(tempo1,vote2);
     postVote(tempo1,vote3);
+    setInterval(checkTime,5000,tempo1);
     return tempo1
+}
+
+async function checkTime(chan){
+    currentTime = new Date();
+    listeMessages = chan.messages.cache.array();
+    listeMessages.forEach(element => {
+        if(element.content.includes("site 1") && currentTime - element.createdAt > 5400000){
+            element.delete();
+            postVote(chan,vote1);
+        }
+        if(element.content.includes("site 2") && currentTime - element.createdAt > 7200000){
+            element.delete();
+            postVote(chan,vote2);
+        }
+        if(element.content.includes("site 3") && currentTime - element.createdAt > 86400000){
+            element.delete();
+            postVote(chan,vote3);
+        }
+    });
 }
 
 
 //Toutes les actions à faire quand le bot se connecte
-client.on("ready", function () {
+client.on("ready", async function () {
     console.log("Mon BOT est Connecté");
+    guild = await client.guilds.fetch('750991182330331247');
+    chanGen = await guild.channels.cache.get('750991182330331250');
+    chanGen.send("Bonjour à tous, je viens de démarrer !");
+    cat = await guild.channels.cache.get('750998295404609606');
+    arrayChildren = cat.children.array();
+    arrayChildren.forEach(element => {
+        setInterval(checkTime,5000,cat.children.get(element.id));
+    });
 })
 
 client.login(process.env.BOT_TOKEN);
@@ -79,15 +107,15 @@ client.on('messageReactionAdd', async (reaction, user) => {
     }
     if(reaction.message.author.id === "750988385685864488"  && reaction.emoji.name === '😆' && user.id !== "750988385685864488"){
         reaction.message.delete({ timeout: 10000, reason: 'A voté' });
-        setTimeout(postVote, 5400000, reaction.message.channel, vote1);
+        reaction.message.channel.send("Tu as bien voté pour le site 1 !");
     }
     if(reaction.message.author.id === "750988385685864488"  && reaction.emoji.name === '😉' && user.id !== "750988385685864488"){
         reaction.message.delete({ timeout: 10000, reason: 'A voté' });
-        setTimeout(postVote, 7200000, reaction.message.channel, vote2);
+        reaction.message.channel.send("Tu as bien voté pour le site 2 !");
     }
     if(reaction.message.author.id === "750988385685864488"  && reaction.emoji.name === '😊' && user.id !== "750988385685864488"){
         reaction.message.delete({ timeout: 10000, reason: 'A voté' });
-        setTimeout(postVote, 86400000, reaction.message.channel, vote3);
+        reaction.message.channel.send("Tu as bien voté pour le site 3 !");
     }
 });
 
