@@ -47,8 +47,11 @@ async function createChannel(message, chanName) {
 
 async function checkTime(chan){
     currentTime = new Date();
-    listeMessages = chan.messages.cache.array();
-    listeMessages.forEach(element => {
+    listeMessages = await chan.messages.fetch();
+    listeMessages.forEach(async element =>  {
+        if(element.partial){
+            await element.fetch()
+        }
         if(element.content.includes("site 1") && currentTime - element.createdAt > 5400000){
             element.delete();
             postVote(chan,vote1);
@@ -78,8 +81,8 @@ client.on("ready", async function () {
     });
 })
 
-client.login(process.env.BOT_TOKEN);
-
+client.login("process.env.BOT_TOKEN");
+//process.env.BOT_TOKEN
 client.on('messageReactionAdd', async (reaction, user) => {
 	// When we receive a reaction we check if the reaction is partial or not
 	if (reaction.partial) {
