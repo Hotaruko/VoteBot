@@ -81,7 +81,7 @@ client.on("ready", async function () {
     });
 })
 
-client.login("process.env.BOT_TOKEN");
+client.login(process.env.BOT_TOKEN);
 //process.env.BOT_TOKEN
 client.on('messageReactionAdd', async (reaction, user) => {
 	// When we receive a reaction we check if the reaction is partial or not
