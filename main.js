@@ -52,15 +52,15 @@ async function checkTime(chan){
         if(element.partial){
             await element.fetch()
         }
-        if(element.content.includes("site 1") && currentTime - element.createdAt > 5400000){
+        if(element.content.includes("site 1") && currentTime - element.createdAt > 5340000){
             element.delete();
             postVote(chan,vote1);
         }
-        if(element.content.includes("site 2") && currentTime - element.createdAt > 7200000){
+        if(element.content.includes("site 2") && currentTime - element.createdAt > 7140000){
             element.delete();
             postVote(chan,vote2);
         }
-        if(element.content.includes("site 3") && currentTime - element.createdAt > 86400000){
+        if(element.content.includes("site 3") && currentTime - element.createdAt > 86340000){
             element.delete();
             postVote(chan,vote3);
         }
