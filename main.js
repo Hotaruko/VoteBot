@@ -1,9 +1,17 @@
 const Discord = require('discord.js');
 const client = new Discord.Client({ partials: ['MESSAGE', 'CHANNEL', 'REACTION'] });
 
-vote1 = "https://serveur-prive.net/minecraft/politicraft-elu-meilleure-communaute-2020-442/vote";
-vote2 = "https://top-serveurs.net/minecraft/politicraft-elu-meilleure-communaute-2020";
-vote3 = "https://www.serveursminecraft.org/serveur/2580/";
+vote1 = "https://serveur-prive.net/minecraft/orezia-8112/vote";
+vote2 = "https://vote.top-serveurs.net/minecraft/orezia";
+vote3 = "https://www.liste-serveurs-minecraft.org/vote/?idc=202197";
+vote4 = "https://www.serveursminecraft.org/serveur/5437/";
+vote5 = "https://serveur-prive.net/minecraft/orezia-8487/vote";
+tempsVote1 = 5395000; //1H30 en ms
+tempsVote2 = 7195000; //2H en ms
+tempsVote3 = 10795000; //3H en ms
+tempsVote4 = 86395000; //24H en ms
+tempsVote5 = 5395000; //24H en ms
+intervalCheckTime = 5000; //Le temps entre chaque verification de channel
 
 async function postVote(chan,lien){
     role = await chan.guild.roles.cache.find(role => role.name === chan.name);
@@ -22,8 +30,17 @@ async function postVote(chan,lien){
             sentMessage.react('😊');
         });
     }
+    if(lien === vote4){
+        chan.send("<@&"+role.id+"> Il est temps de voter ici ! : "+lien).then(sentMessage => {
+            sentMessage.react('✅');
+        });
+    }
+    if(lien === vote5){
+        chan.send("<@&"+role.id+"> Il est temps de voter ici ! : "+lien).then(sentMessage => {
+            sentMessage.react('☑️');
+        });
+    }
 }
-
 
 async function createChannel(message, chanName) {
     const tempo1= await message.guild.channels.create(chanName, {
@@ -41,7 +58,9 @@ async function createChannel(message, chanName) {
     postVote(tempo1,vote1);
     postVote(tempo1,vote2);
     postVote(tempo1,vote3);
-    setInterval(checkTime,5000,tempo1);
+    postVote(tempo1,vote4);
+    postVote(tempo1,vote5);
+    setInterval(checkTime,intervalCheckTime,tempo1);
     return tempo1
 }
 
@@ -52,17 +71,25 @@ async function checkTime(chan){
         if(element.partial){
             await element.fetch()
         }
-        if(element.content.includes("site 1") && currentTime - element.createdAt > 5340000){
+        if(element.content.includes("site 1") && currentTime - element.createdAt > tempsVote1){
             element.delete();
             postVote(chan,vote1);
         }
-        if(element.content.includes("site 2") && currentTime - element.createdAt > 7140000){
+        if(element.content.includes("site 2") && currentTime - element.createdAt > tempsVote2){
             element.delete();
             postVote(chan,vote2);
         }
-        if(element.content.includes("site 3") && currentTime - element.createdAt > 86340000){
+        if(element.content.includes("site 3") && currentTime - element.createdAt > tempsVote3){
             element.delete();
             postVote(chan,vote3);
+        }
+        if(element.content.includes("site 4") && currentTime - element.createdAt > tempsVote4){
+            element.delete();
+            postVote(chan,vote4);
+        }
+        if(element.content.includes("site 5") && currentTime - element.createdAt > tempsVote5){
+            element.delete();
+            postVote(chan,vote5);
         }
     });
 }
@@ -77,7 +104,7 @@ client.on("ready", async function () {
     cat = await guild.channels.cache.get('750998295404609606');
     arrayChildren = cat.children.array();
     arrayChildren.forEach(element => {
-        setInterval(checkTime,5000,cat.children.get(element.id));
+        setInterval(checkTime,intervalCheckTime,cat.children.get(element.id));
     });
 })
 
@@ -120,10 +147,18 @@ client.on('messageReactionAdd', async (reaction, user) => {
         reaction.message.delete({ timeout: 10000, reason: 'A voté' });
         reaction.message.channel.send("Tu as bien voté pour le site 3 !");
     }
+    if(reaction.message.author.id === "750988385685864488"  && reaction.emoji.name === '✅' && user.id !== "750988385685864488"){
+        reaction.message.delete({ timeout: 10000, reason: 'A voté' });
+        reaction.message.channel.send("Tu as bien voté pour le site 4 !");
+    }
+    if(reaction.message.author.id === "750988385685864488"  && reaction.emoji.name === '☑️' && user.id !== "750988385685864488"){
+        reaction.message.delete({ timeout: 10000, reason: 'A voté' });
+        reaction.message.channel.send("Tu as bien voté pour le site 5 !");
+    }
 });
 
 client.on('message', async message => {
-    if(message.content.includes("Créer le chan de : ")){
+    if(message.content.includes("Chan : ")){
         chanName = message.content.split(" : ")[1];
         newChan = createChannel(message, chanName.toLowerCase());
     }
