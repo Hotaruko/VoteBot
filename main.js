@@ -6,11 +6,13 @@ vote2 = "https://vote.top-serveurs.net/minecraft/orezia";
 vote3 = "https://www.liste-serveurs-minecraft.org/vote/?idc=202197";
 vote4 = "https://www.serveursminecraft.org/serveur/5437/";
 vote5 = "https://serveur-prive.net/minecraft/orezia-8487/vote";
+vote5 = "https://serveur-minecraft.com/3036";
 tempsVote1 = 5395000; //1H30 en ms
 tempsVote2 = 7195000; //2H en ms
 tempsVote3 = 10795000; //3H en ms
 tempsVote4 = 86395000; //24H en ms
 tempsVote5 = 5395000; //24H en ms
+tempsVote6 = 10795000; //3H en ms
 intervalCheckTime = 5000; //Le temps entre chaque verification de channel
 
 async function postVote(chan,lien){
@@ -40,6 +42,11 @@ async function postVote(chan,lien){
             sentMessage.react('☑️');
         });
     }
+    if(lien === vote6){
+        chan.send("<@&"+role.id+"> Il est temps de voter ici ! : "+lien).then(sentMessage => {
+            sentMessage.react('🦴');
+        });
+    }
 }
 
 async function createChannel(message, chanName) {
@@ -60,6 +67,7 @@ async function createChannel(message, chanName) {
     postVote(tempo1,vote3);
     postVote(tempo1,vote4);
     postVote(tempo1,vote5);
+    postVote(tempo1,vote6);
     setInterval(checkTime,intervalCheckTime,tempo1);
     return tempo1
 }
@@ -90,6 +98,10 @@ async function checkTime(chan){
         if(element.content.includes("site 5") && currentTime - element.createdAt > tempsVote5){
             element.delete();
             postVote(chan,vote5);
+        }
+        if(element.content.includes("site 6") && currentTime - element.createdAt > tempsVote6){
+            element.delete();
+            postVote(chan,vote6);
         }
     });
 }
@@ -154,6 +166,10 @@ client.on('messageReactionAdd', async (reaction, user) => {
     if(reaction.message.author.id === "750988385685864488"  && reaction.emoji.name === '☑️' && user.id !== "750988385685864488"){
         reaction.message.delete({ timeout: 10000, reason: 'A voté' });
         reaction.message.channel.send("Tu as bien voté pour le site 5 !");
+    }
+    if(reaction.message.author.id === "750988385685864488"  && reaction.emoji.name === '🦴' && user.id !== "750988385685864488"){
+        reaction.message.delete({ timeout: 10000, reason: 'A voté' });
+        reaction.message.channel.send("Tu as bien voté pour le site 6 !");
     }
 });
 
