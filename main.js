@@ -6,7 +6,7 @@ vote2 = "https://vote.top-serveurs.net/minecraft/orezia";
 vote3 = "https://www.liste-serveurs-minecraft.org/vote/?idc=202197";
 vote4 = "https://www.serveursminecraft.org/serveur/5437/";
 vote5 = "https://serveur-prive.net/minecraft/orezia-8487/vote";
-vote5 = "https://serveur-minecraft.com/3036";
+vote6 = "https://serveur-minecraft.com/3036";
 tempsVote1 = 5395000; //1H30 en ms
 tempsVote2 = 7195000; //2H en ms
 tempsVote3 = 10795000; //3H en ms
